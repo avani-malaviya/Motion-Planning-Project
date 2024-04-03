@@ -61,16 +61,24 @@ def weighted_AStarSearch(problem, heuristic_ip, otherPaths):
         for successor_state, action, step_cost in successors:
             for otherPath in otherPaths:
                 if len(otherPath) > len(path) + 1 and not successor_state == otherPath[len(path)+1]:
-                    if successor_state not in closed_set:
-                        new_path = path + [action]
-                        new_cost = cost + step_cost
-                        if heuristic_ip == 'E':
-                            heuristic = heuristic_1(problem, successor_state)
-                        elif heuristic_ip == 'M':
-                            heuristic = heuristic_2(problem, successor_state)
-                        elif heuristic_ip.isdigit():
-                            heuristic = int(heuristic_ip) * heuristic_1(problem, successor_state)
-                        fringe.put((new_cost + heuristic, [successor_state, new_path, new_cost]))
+                    # Check if the successor_state is within a 4x4 bounding box of the otherPath
+                    within_bounding_box = False
+                    for i in range(max(0, len(otherPath)-2), len(otherPath)):
+                        if abs(successor_state[0] - otherPath[i][0]) <= 1 and abs(successor_state[1] - otherPath[i][1]) <= 1:
+                            within_bounding_box = True
+                            break
+
+                    if not within_bounding_box:
+                        if successor_state not in closed_set:
+                            new_path = path + [action]
+                            new_cost = cost + step_cost
+                            if heuristic_ip == 'E':
+                                heuristic = heuristic_1(problem, successor_state)
+                            elif heuristic_ip == 'M':
+                                heuristic = heuristic_2(problem, successor_state)
+                            elif heuristic_ip.isdigit():
+                                heuristic = int(heuristic_ip) * heuristic_1(problem, successor_state)
+                            fringe.put((new_cost + heuristic, [successor_state, new_path, new_cost]))
 
             if not otherPaths: 
                 if successor_state not in closed_set:    

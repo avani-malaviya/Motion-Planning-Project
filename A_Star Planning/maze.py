@@ -250,9 +250,22 @@ if __name__ == '__main__':
     else:        
         print("Could not find a path")  
 
-for i in range(len(path_nodes2)):
-    if path_nodes2[i] == path_nodes3[i] or path_nodes3[i] == path_nodes[i] or path_nodes[i] == path_nodes2[i]:
+def within_bounding_box(node1, node2):
+    # Assuming node1 and node2 have x and y attributes representing their coordinates
+    return abs(node1[0] - node2[0]) <= 2 and abs(node1[1] - node2[1]) <= 2
+
+for i in range(min(len(path_nodes3), len(path_nodes2), len(path_nodes))):
+    node1 = path_nodes3[i]
+    node2 = path_nodes2[i]
+    node3 = path_nodes[i]
+
+    # Check if any two nodes are within each other's bounding boxes
+    if (node1 == node2 or node1 == node3 or node2 == node3 or
+        within_bounding_box(node1, node2) or
+        within_bounding_box(node1, node3) or
+        within_bounding_box(node2, node3)):
         print('bad!!')
+
 
     
 

@@ -13,10 +13,11 @@ import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
 import matplotlib.animation as animation
+import numpy as np
 
 #Flag to enable plots
 #Disbaled in VPL
-enable_plots  = True
+enable_plots  = False
 class Maze:
   """
   This class outlines the structure of the maze problem
@@ -228,6 +229,28 @@ if __name__ == '__main__':
         print("Could not find a path")  
 
 
+import csv
+
+with open("Map_Extraction/refinedmap.csv", newline='') as f:
+    reader = csv.reader(f)
+    map = list(reader)
+
+max_row = int(map[-1][1])
+max_col = int(map[-1][0])
+
+map1 = [ [0]*(int(map[-1][0])+1) for i in range(int(map[-1][1])+1)]
+
+for i in range(len(map)):
+    if (float(map[i][2]) >100) : map1[int(map[i][1])][int(map[i][0])] = 3
+    else: map1[int(map[i][1])][int(map[i][0])] = 16
+
+for i in range(len(map1)):
+    map1[i][-1] = 16
+    map1[i][0] = 16    
+
+for i in range(len(map1[1][:])):
+    map1[-1][i] = 16
+
 # Find the longest path
 max_length = max(len(path_nodes), len(path_nodes2), len(path_nodes3))
 
@@ -244,9 +267,18 @@ x3, y3 = zip(*path3)
 # Create a figure and axis
 fig, ax = plt.subplots()
 
+map = np.transpose(map1)
+
+# Plot the obstacles
+for i in range(len(map)):
+    for j in range(len(map[0])):
+        if map[i][j] == 16:
+            rect = plt.Rectangle((j - 0.5, i - 0.5), 1, 1, facecolor='gray')
+            ax.add_patch(rect)
+
 # Set axis limits and labels
-ax.set_xlim(min(min(x1), min(x2), min(x3)) - 5, max(max(x1), max(x2), max(x3)) + 5)
-ax.set_ylim(min(min(y1), min(y2), min(y3)) - 5, max(max(y1), max(y2), max(y3)) + 5)
+# ax.set_xlim(min(min(x1), min(x2), min(x3)) - 5, max(max(x1), max(x2), max(x3)) + 5)
+# ax.set_ylim(min(min(y1), min(y2), min(y3)) - 5, max(max(y1), max(y2), max(y3)) + 5)
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_title('Robot Paths with Bounding Boxes')
@@ -255,22 +287,25 @@ ax.set_title('Robot Paths with Bounding Boxes')
 line1, = ax.plot([], [], 'ro', lw=2)
 line2, = ax.plot([], [], 'go', lw=2)
 line3, = ax.plot([], [], 'bo', lw=2)
-bbox1 = ax.add_patch(plt.Rectangle((0, 0), 2, 2, fill=False, edgecolor='r'))
-bbox2 = ax.add_patch(plt.Rectangle((0, 0), 2, 2, fill=False, edgecolor='g'))
-bbox3 = ax.add_patch(plt.Rectangle((0, 0), 2, 2, fill=False, edgecolor='b'))
+bbox1 = ax.add_patch(plt.Circle((0, 0), radius=3, fill=False, edgecolor='r'))
+bbox2 = ax.add_patch(plt.Circle((0, 0), radius=3, fill=False, edgecolor='g'))
+bbox3 = ax.add_patch(plt.Circle((0, 0), radius=3, fill=False, edgecolor='b'))
 
 # Animation function
 def animate(i):
     line1.set_data(x1[:i+1], y1[:i+1])
     line2.set_data(x2[:i+1], y2[:i+1])
     line3.set_data(x3[:i+1], y3[:i+1])
-    bbox1.set_xy((x1[i]-1, y1[i]-1))
-    bbox2.set_xy((x2[i]-1, y2[i]-1))
-    bbox3.set_xy((x3[i]-1, y3[i]-1))
+    bbox1.center = (x1[i], y1[i])
+    bbox2.center = (x2[i], y2[i])
+    bbox3.center = (x3[i], y3[i])
     return line1, line2, line3, bbox1, bbox2, bbox3
 
 # Create the animation
 ani = animation.FuncAnimation(fig, animate, frames=max(len(path_nodes), len(path_nodes2), len(path_nodes3)), interval=200, blit=True)
+
+# Save the animation as a GIF
+ani.save('robot_paths.gif', writer='pillow', fps=5)
 
 # Show the animation
 plt.show()

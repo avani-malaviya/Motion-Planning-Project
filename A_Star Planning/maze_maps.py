@@ -40,13 +40,13 @@ for i in range(len(map1[1][:])):
 for row in range(1, max_row):
     for col in range(1, max_col):
         if map1[row][col] == 16:
-            for i in range(max(0, row - 3), min(max_row, row + 3)):
-                for j in range(max(0, col - 3), min(max_col, col + 3)):
+            for i in range(max(0, row - 2), min(max_row, row + 2)):
+                for j in range(max(0, col - 2), min(max_col, col + 2)):
                     if i != row or j != col:
                         map1[i][j] = 27
 
-for row in range(1, max_row):
-    for col in range(1, max_col):
+for row in range(0, max_row):
+    for col in range(0, max_col):
         if map1[row][col] == 27:
             map1[row][col] = 16
 
@@ -63,7 +63,7 @@ class Maps:
 map_1 = Maps()
 map_1.map_data = map1
 
-map_1.start = [70, 90]
+map_1.start = [20, 15]
 map_1.goal = [20, 100]
 
 # print(map_1.map_data)
@@ -73,11 +73,11 @@ map_2 = Maps()
 map_3 = Maps()
 
 map_2.map_data = map1
-map_2.start = [16, 16]
+map_2.start = [30, 47]
 map_2.goal = [30, 80]
 
 map_3.map_data = map1
-map_3.start = [60, 12]
+map_3.start = [30, 70]
 map_3.goal = [40, 100]
 
 maps_dictionary = {1:map_1, 2:map_2, 3:map_3}

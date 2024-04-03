@@ -59,7 +59,7 @@ def weighted_AStarSearch(problem, heuristic_ip, otherPaths):
         successors = problem.getSuccessors(state)
         for successor_state, action, step_cost in successors:
             for otherPath in otherPaths:                    
-                if not math.sqrt((successor_state[0] - otherPath[min(len(path)+1, len(otherPath)-1)][0])**2 + (successor_state[1] - otherPath[min(len(path)+1, len(otherPath)-1)][1])**2) <= 6:
+                if not math.sqrt((successor_state[0] - otherPath[min(len(path)+1, len(otherPath)-1)][0])**2 + (successor_state[1] - otherPath[min(len(path)+1, len(otherPath)-1)][1])**2) <= 10:
 
                     if (successor_state, len(path)) not in closed_set:
                         new_path = path + [action]

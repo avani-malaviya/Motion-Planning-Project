@@ -203,7 +203,7 @@ if __name__ == '__main__':
         
     current_maze = Maze(3)
 
-    path, path_nodes3 = search.weighted_AStarSearch(current_maze, '2', [path_nodes,path_nodes2])
+    path, path_nodes3 = search.weighted_AStarSearch(current_maze, 'E', [path_nodes,path_nodes2])
     print(path_nodes3)
     result = pd.DataFrame(path_nodes)
     result.to_csv("Path3.csv", header=False, index=False)

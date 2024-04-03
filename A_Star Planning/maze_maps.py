@@ -58,7 +58,7 @@ map_1 = Maps()
 map_1.map_data = map1
 
 map_1.start = [40,9]
-map_1.goal = [30, 70]
+map_1.goal = [20, 120]
 
 # print(map_1.map_data)
 # print(f"{len(map_1.map_data)}, {len(map_1.map_data[0])}")
@@ -68,11 +68,11 @@ map_3 = Maps()
 
 map_2.map_data = map1
 map_2.start = [30, 20]
-map_2.goal = [40, 80]
+map_2.goal = [40, 100]
 
 map_3.map_data = map1
-map_3.start = [20, 12]
-map_3.goal = [70, 9]
+map_3.start = [30, 12]
+map_3.goal = [20, 100]
 
 maps_dictionary = {1:map_1, 2:map_2, 3:map_3}
 

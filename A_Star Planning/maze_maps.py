@@ -40,10 +40,15 @@ for i in range(len(map1[1][:])):
 for row in range(1, max_row):
     for col in range(1, max_col):
         if map1[row][col] == 16:
-            for i in range(max(0, row - 2), min(max_row + 1, row + 1)):
-                for j in range(max(0, col - 2), min(max_col + 1, col + 1)):
+            for i in range(max(0, row - 3), min(max_row, row + 3)):
+                for j in range(max(0, col - 3), min(max_col, col + 3)):
                     if i != row or j != col:
-                        map1[i][j] = 16
+                        map1[i][j] = 27
+
+for row in range(1, max_row):
+    for col in range(1, max_col):
+        if map1[row][col] == 27:
+            map1[row][col] = 16
 
 class Maps:
     """

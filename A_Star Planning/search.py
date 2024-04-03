@@ -62,7 +62,7 @@ def weighted_AStarSearch(problem, heuristic_ip, otherPaths):
                     # Check if the successor_state is within a 4x4 bounding box of the otherPath
                     within_bounding_box = False
                     for i in range(max(0, len(otherPath)-2), len(otherPath)):
-                        if abs(successor_state[0] - otherPath[i][0]) <= 1 and abs(successor_state[1] - otherPath[i][1]) <= 1:
+                        if abs(successor_state[0] - otherPath[i][0]) <= 3 and abs(successor_state[1] - otherPath[i][1]) <= 3:
                             within_bounding_box = True
                             break
 

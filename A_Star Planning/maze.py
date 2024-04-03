@@ -11,6 +11,7 @@ import maze_maps
 import matplotlib
 #matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import pandas as pd
 
 #Flag to enable plots
 #Disbaled in VPL
@@ -145,35 +146,23 @@ class Maze:
              
          successors.append([new_successor, new_action, new_cost])
          
-     #if enable_plots:   
-         #Plot the changes
-     #    self.plot_map()
      return successors
 
 if __name__ == '__main__':
     
     current_maze = Maze(1)
-    #The three case are listed below, make sure you uncomment each of them and ensure your implimentation works for each 
-    #Case a
     path, path_nodes = search.weighted_AStarSearch(current_maze, '2', [])
     print(path_nodes)
-    #Case b
-    #path = search.weighted_AStarSearch(current_maze, 'M')
-    #Case c
-    #path = search.weighted_AStarSearch(current_maze, '50')
+    result = pd.DataFrame(path_nodes)
+    result.to_csv("Path1.csv", header=False, index=False)
     if path:
-        #Check path validity
         row,col = current_maze.getStartState() 
         for action in path:
             del_x, del_y = current_maze.eight_neighbor_actions.get(action)
             row = row + del_x
             col = col + del_y
             if enable_plots:
-                #Update changes on the plot copy
                 current_maze.map_plot_copy[row][col] = 10
-        #if enable_plots:        
-            #Plot the solution
-        #    current_maze.plot_map()
         if current_maze.isGoalState([row, col]):
             print("Found a path of ", len(path)," moves by expanding ",current_maze.getStateExpansionCount()," nodes")
             if enable_plots:
@@ -190,23 +179,16 @@ if __name__ == '__main__':
 
     path, path_nodes2 = search.weighted_AStarSearch(current_maze, '2', [path_nodes])
     print(path_nodes2)
-    #Case b
-    #path = search.weighted_AStarSearch(current_maze, 'M')
-    #Case c
-    #path = search.weighted_AStarSearch(current_maze, '50')
+    result = pd.DataFrame(path_nodes)
+    result.to_csv("Path2.csv", header=False, index=False)
     if path:
-        #Check path validity
         row,col = current_maze.getStartState() 
         for action in path:
             del_x, del_y = current_maze.eight_neighbor_actions.get(action)
             row = row + del_x
             col = col + del_y
             if enable_plots:
-                #Update changes on the plot copy
                 current_maze.map_plot_copy[row][col] = 10
-        #if enable_plots:        
-            #Plot the solution
-        #    current_maze.plot_map()
         if current_maze.isGoalState([row, col]):
             print("Found a path of ", len(path)," moves by expanding ",current_maze.getStateExpansionCount()," nodes")
             if enable_plots:
@@ -223,10 +205,8 @@ if __name__ == '__main__':
 
     path, path_nodes3 = search.weighted_AStarSearch(current_maze, '2', [path_nodes,path_nodes2])
     print(path_nodes3)
-    #Case b
-    #path = search.weighted_AStarSearch(current_maze, 'M')
-    #Case c
-    #path = search.weighted_AStarSearch(current_maze, '50')
+    result = pd.DataFrame(path_nodes)
+    result.to_csv("Path3.csv", header=False, index=False)
     if path:
         #Check path validity
         row,col = current_maze.getStartState() 
@@ -235,11 +215,7 @@ if __name__ == '__main__':
             row = row + del_x
             col = col + del_y
             if enable_plots:
-                #Update changes on the plot copy
                 current_maze.map_plot_copy[row][col] = 10
-        #if enable_plots:        
-            #Plot the solution
-        #    current_maze.plot_map()
         if current_maze.isGoalState([row, col]):
             print("Found a path of ", len(path)," moves by expanding ",current_maze.getStateExpansionCount()," nodes")
             if enable_plots:
@@ -250,8 +226,9 @@ if __name__ == '__main__':
     else:        
         print("Could not find a path")  
 
+
+
 def within_bounding_box(node1, node2):
-    # Assuming node1 and node2 have x and y attributes representing their coordinates
     return abs(node1[0] - node2[0]) <= 2 and abs(node1[1] - node2[1]) <= 2
 
 for i in range(min(len(path_nodes3), len(path_nodes2), len(path_nodes))):

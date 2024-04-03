@@ -39,18 +39,16 @@ def weighted_AStarSearch(problem, heuristic_ip, otherPaths):
         state, path, cost = node
 
         if problem.isGoalState(state):
-            path_pd = [problem.getStartState()]
+            path_nodes = [problem.getStartState()]
             i = 0
             for action in path:
-                state = path_pd[i]
+                state = path_nodes[i]
                 del_x, del_y = problem.eight_neighbor_actions.get(action)
                 new_successor = [state[0] + del_x , state[1] + del_y]
-                path_pd.append(new_successor)
+                path_nodes.append(new_successor)
                 i += 1
             
-            result = pd.DataFrame(path_pd)
-            result.to_csv("Paths.csv", header=False, index=False)
-            return path, path_pd
+            return path, path_nodes
 
         if state in closed_set:
             continue

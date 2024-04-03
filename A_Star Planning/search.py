@@ -32,11 +32,12 @@ def weighted_AStarSearch(problem, heuristic_ip, otherPaths):
     "*** YOUR CODE HERE ***"
     fringe = queue.PriorityQueue()
     closed_set = []
-    fringe.put((0, (problem.getStartState(), [], 0)))
+    fringe.put((0, ((problem.getStartState(),0), [], 0)))
 
     while not fringe.empty():
         p, node = fringe.get()
-        state, path, cost = node
+        state_t, path, cost = node
+        state = state_t[0]
 
         if problem.isGoalState(state):
             path_nodes = [problem.getStartState()]
@@ -50,36 +51,32 @@ def weighted_AStarSearch(problem, heuristic_ip, otherPaths):
             
             return path, path_nodes
 
-        if state in closed_set:
+        if state_t in closed_set:
             continue
 
-        closed_set.append(state)
+        closed_set.append(state_t)
 
         successors = problem.getSuccessors(state)
         for successor_state, action, step_cost in successors:
-            for otherPath in otherPaths:
-                if len(otherPath) > len(path) + 1 and not successor_state == otherPath[len(path)+1]:
-                    # Check if the successor_state is within a 4x4 bounding box of the otherPath
-                    within_bounding_box = False
-                    for i in range(max(0, len(otherPath)-2), len(otherPath)):
-                        if abs(successor_state[0] - otherPath[i][0]) <= 3 and abs(successor_state[1] - otherPath[i][1]) <= 3:
-                            within_bounding_box = True
-                            break
+            for otherPath in otherPaths:                    
+                if not math.sqrt((successor_state[0] - otherPath[min(len(path)+1, len(otherPath)-1)][0])**2 + (successor_state[1] - otherPath[min(len(path)+1, len(otherPath)-1)][1])**2) <= 6:
 
-                    if not within_bounding_box:
-                        if successor_state not in closed_set:
-                            new_path = path + [action]
-                            new_cost = cost + step_cost
-                            if heuristic_ip == 'E':
-                                heuristic = heuristic_1(problem, successor_state)
-                            elif heuristic_ip == 'M':
-                                heuristic = heuristic_2(problem, successor_state)
-                            elif heuristic_ip.isdigit():
-                                heuristic = int(heuristic_ip) * heuristic_1(problem, successor_state)
-                            fringe.put((new_cost + heuristic, [successor_state, new_path, new_cost]))
+                    if (successor_state, len(path)) not in closed_set:
+                        new_path = path + [action]
+                        new_cost = cost + step_cost
+                        if heuristic_ip == 'E':
+                            heuristic = heuristic_1(problem, successor_state)
+                        elif heuristic_ip == 'M':
+                            heuristic = heuristic_2(problem, successor_state)
+                        elif heuristic_ip.isdigit():
+                            heuristic = int(heuristic_ip) * heuristic_1(problem, successor_state)
+                        fringe.put((new_cost + heuristic, [(successor_state, len(new_path)), new_path, new_cost]))
+
+                else:
+                    fringe.put((cost, [(state, len(path)+1), path + ['s'], cost]))
 
             if not otherPaths: 
-                if successor_state not in closed_set:    
+                if (successor_state, len(path)) not in closed_set:    
                     new_path = path + [action]
                     new_cost = cost + step_cost
 
@@ -90,7 +87,7 @@ def weighted_AStarSearch(problem, heuristic_ip, otherPaths):
                     if heuristic_ip.isdigit():
                         heuristic = int(heuristic_ip)*heuristic_1(problem, successor_state)
 
-                    fringe.put((new_cost + heuristic, [successor_state, new_path , new_cost]))
+                    fringe.put((new_cost + heuristic, [(successor_state, len(new_path)), new_path , new_cost]))
 
 
     return [], []

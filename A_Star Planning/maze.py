@@ -12,6 +12,7 @@ import matplotlib
 #matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pandas as pd
+import matplotlib.animation as animation
 
 #Flag to enable plots
 #Disbaled in VPL
@@ -25,7 +26,7 @@ class Maze:
   
   # Legal moves
   # [delta_x, delta_y, description]
-  eight_neighbor_actions = {'up':[-1, 0], 'down':[1, 0], 'left': [0, -1], 'right': [0, 1], 'ul': [-1, -1], 'ur': [-1, 1], 'dl': [1, -1], 'dr': [1, 1]}
+  eight_neighbor_actions = {'up':[-1, 0], 'down':[1, 0], 'left': [0, -1], 'right': [0, 1], 'ul': [-1, -1], 'ur': [-1, 1], 'dl': [1, -1], 'dr': [1, 1], 's': [0,0]}
 
   if enable_plots:
       #Setup plot
@@ -151,7 +152,7 @@ class Maze:
 if __name__ == '__main__':
     
     current_maze = Maze(1)
-    path, path_nodes = search.weighted_AStarSearch(current_maze, '2', [])
+    path, path_nodes = search.weighted_AStarSearch(current_maze, 'E', [])
     print(path_nodes)
     result = pd.DataFrame(path_nodes)
     result.to_csv("Path1.csv", header=False, index=False)
@@ -177,7 +178,7 @@ if __name__ == '__main__':
 
     current_maze = Maze(2)
 
-    path, path_nodes2 = search.weighted_AStarSearch(current_maze, '2', [path_nodes])
+    path, path_nodes2 = search.weighted_AStarSearch(current_maze, 'E', [path_nodes])
     print(path_nodes2)
     result = pd.DataFrame(path_nodes)
     result.to_csv("Path2.csv", header=False, index=False)
@@ -227,21 +228,52 @@ if __name__ == '__main__':
         print("Could not find a path")  
 
 
+# Find the longest path
+max_length = max(len(path_nodes), len(path_nodes2), len(path_nodes3))
 
-def within_bounding_box(node1, node2):
-    return abs(node1[0] - node2[0]) <= 2 and abs(node1[1] - node2[1]) <= 2
+# Extend the shorter paths with the last element
+path1 = path_nodes + [path_nodes[-1]] * (max_length - len(path_nodes))
+path2 = path_nodes2 + [path_nodes2[-1]] * (max_length - len(path_nodes2))
+path3 = path_nodes3 + [path_nodes3[-1]] * (max_length - len(path_nodes3))
 
-for i in range(min(len(path_nodes3), len(path_nodes2), len(path_nodes))):
-    node1 = path_nodes3[i]
-    node2 = path_nodes2[i]
-    node3 = path_nodes[i]
+# Extract the x and y coordinates for each path
+x1, y1 = zip(*path1)
+x2, y2 = zip(*path2)
+x3, y3 = zip(*path3)
 
-    # Check if any two nodes are within each other's bounding boxes
-    if (node1 == node2 or node1 == node3 or node2 == node3 or
-        within_bounding_box(node1, node2) or
-        within_bounding_box(node1, node3) or
-        within_bounding_box(node2, node3)):
-        print('bad!!')
+# Create a figure and axis
+fig, ax = plt.subplots()
+
+# Set axis limits and labels
+ax.set_xlim(min(min(x1), min(x2), min(x3)) - 5, max(max(x1), max(x2), max(x3)) + 5)
+ax.set_ylim(min(min(y1), min(y2), min(y3)) - 5, max(max(y1), max(y2), max(y3)) + 5)
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_title('Robot Paths with Bounding Boxes')
+
+# Initialize the plot lines and bounding boxes
+line1, = ax.plot([], [], 'ro', lw=2)
+line2, = ax.plot([], [], 'go', lw=2)
+line3, = ax.plot([], [], 'bo', lw=2)
+bbox1 = ax.add_patch(plt.Rectangle((0, 0), 2, 2, fill=False, edgecolor='r'))
+bbox2 = ax.add_patch(plt.Rectangle((0, 0), 2, 2, fill=False, edgecolor='g'))
+bbox3 = ax.add_patch(plt.Rectangle((0, 0), 2, 2, fill=False, edgecolor='b'))
+
+# Animation function
+def animate(i):
+    line1.set_data(x1[:i+1], y1[:i+1])
+    line2.set_data(x2[:i+1], y2[:i+1])
+    line3.set_data(x3[:i+1], y3[:i+1])
+    bbox1.set_xy((x1[i]-1, y1[i]-1))
+    bbox2.set_xy((x2[i]-1, y2[i]-1))
+    bbox3.set_xy((x3[i]-1, y3[i]-1))
+    return line1, line2, line3, bbox1, bbox2, bbox3
+
+# Create the animation
+ani = animation.FuncAnimation(fig, animate, frames=max(len(path_nodes), len(path_nodes2), len(path_nodes3)), interval=200, blit=True)
+
+# Show the animation
+plt.show()
 
 
     

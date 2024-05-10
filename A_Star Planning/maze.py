@@ -301,6 +301,7 @@ def animate(i):
     bbox3.center = (x3[i], y3[i])
     return line1, line2, line3, bbox1, bbox2, bbox3
 
+
 # Create the animation
 ani = animation.FuncAnimation(fig, animate, frames=max(len(path_nodes), len(path_nodes2), len(path_nodes3)), interval=200, blit=True)
 

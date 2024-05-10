@@ -58,23 +58,6 @@ def weighted_AStarSearch(problem, heuristic_ip, otherPaths):
 
         successors = problem.getSuccessors(state)
         for successor_state, action, step_cost in successors:
-            for otherPath in otherPaths:                    
-                if not math.sqrt((successor_state[0] - otherPath[min(len(path)+1, len(otherPath)-1)][0])**2 + (successor_state[1] - otherPath[min(len(path)+1, len(otherPath)-1)][1])**2) <= 10:
-
-                    if (successor_state, len(path)) not in closed_set:
-                        new_path = path + [action]
-                        new_cost = cost + step_cost
-                        if heuristic_ip == 'E':
-                            heuristic = heuristic_1(problem, successor_state)
-                        elif heuristic_ip == 'M':
-                            heuristic = heuristic_2(problem, successor_state)
-                        elif heuristic_ip.isdigit():
-                            heuristic = int(heuristic_ip) * heuristic_1(problem, successor_state)
-                        fringe.put((new_cost + heuristic, [(successor_state, len(new_path)), new_path, new_cost]))
-
-                else:
-                    fringe.put((cost, [(state, len(path)+1), path + ['s'], cost]))
-
             if not otherPaths: 
                 if (successor_state, len(path)) not in closed_set:    
                     new_path = path + [action]
@@ -88,6 +71,28 @@ def weighted_AStarSearch(problem, heuristic_ip, otherPaths):
                         heuristic = int(heuristic_ip)*heuristic_1(problem, successor_state)
 
                     fringe.put((new_cost + heuristic, [(successor_state, len(new_path)), new_path , new_cost]))
+
+            else:
+                check_successor = True
+
+                for otherPath in otherPaths:                    
+                    if math.sqrt((successor_state[0] - otherPath[min(len(path)+1, len(otherPath)-1)][0])**2 + (successor_state[1] - otherPath[min(len(path)+1, len(otherPath)-1)][1])**2) <= 10:
+                        check_successor = False 
+                        break
+
+                if check_successor and (successor_state, len(path)) not in closed_set:
+                    new_path = path + [action]
+                    new_cost = cost + step_cost
+                    if heuristic_ip == 'E':
+                        heuristic = heuristic_1(problem, successor_state)
+                    elif heuristic_ip == 'M':
+                        heuristic = heuristic_2(problem, successor_state)
+                    elif heuristic_ip.isdigit():
+                        heuristic = int(heuristic_ip) * heuristic_1(problem, successor_state)
+                    fringe.put((new_cost + heuristic, [(successor_state, len(new_path)), new_path, new_cost]))
+
+                elif not check_successor:
+                    fringe.put((cost + 1, [(state, len(path)+1), path + ['s'], cost + 1]))
 
 
     return [], []

@@ -1,4 +1,5 @@
 .vscode
 __pycache__
-D_star
 A_star Planning/__pycache__
+D_star/__pycache__
+Map_Extraction/__pycache__

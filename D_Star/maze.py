@@ -36,7 +36,7 @@ class Maze:
   
   # Legal moves
   # [delta_x, delta_y, description]
-  eight_neighbor_actions = {'up':[-1, 0], 'down':[1, 0], 'left': [0, -1], 'right': [0, 1], 'ul': [-1, -1], 'ur': [-1, 1], 'dl': [1, -1], 'dr': [1, 1]}
+  eight_neighbor_actions = {'up':[-1, 0], 'down':[1, 0], 'left': [0, -1], 'right': [0, 1], 'ul': [-1, -1], 'ur': [-1, 1], 'dl': [1, -1]}
 
   if enable_plots:
       #Setup plot
@@ -443,6 +443,7 @@ if __name__ == '__main__':
                             break
                         states_with_cost_1[predecessor.index] = predecessor
                     states_with_cost_1[state.index] = state
+            for state in states_with_cost_1:        
                 index = state.index
                 succ = state.successors
                 succ_old = states_with_cost_1_old[index].successors
@@ -480,6 +481,7 @@ if __name__ == '__main__':
                             break
                         states_with_cost_2[predecessor.index] = predecessor
                     states_with_cost_2[state.index] = state
+            for state in states_with_cost_2:        
                 index = state.index
                 succ = state.successors
                 succ_old = states_with_cost_2_old[index].successors
@@ -517,6 +519,7 @@ if __name__ == '__main__':
                             break
                         states_with_cost_3[predecessor.index] = predecessor
                     states_with_cost_3[state.index] = state
+            for state in states_with_cost_3:        
                 index = state.index
                 succ = state.successors
                 succ_old = states_with_cost_3_old[index].successors
@@ -684,6 +687,7 @@ for i in range(len(map)):
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_title('Robot Paths with Bounding Boxes')
+#ax.axis('equal')
 
 # Initialize the plot lines and bounding boxes
 line1, = ax.plot([], [], 'ro', lw=2)

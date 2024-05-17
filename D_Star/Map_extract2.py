@@ -17,7 +17,7 @@ b_threshed = cv2.threshold(b_channel, b_thresh, 255, cv2.THRESH_BINARY)[1]
 kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
 binaryMask = cv2.morphologyEx(b_threshed, cv2.MORPH_CLOSE, kernel)
 
-binaryMask = cv2.resize(binaryMask,(0,0), fx=0.14, fy=0.14)
+binaryMask = cv2.resize(binaryMask,(0,0), fx=0.2, fy=0.2)
 final_image = []
 
 height, width = binaryMask.shape

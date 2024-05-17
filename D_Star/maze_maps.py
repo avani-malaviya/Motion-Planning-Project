@@ -64,8 +64,8 @@ class Maps:
 map_1 = Maps()
 map_1.map_data = map1
 
-map_1.start = [int(65*0.14/0.3), int(20*0.14/0.3)]
-map_1.goal = [int(20*0.14/0.3), int(100*0.14/0.3)]
+map_1.start = [int(65*0.2/0.3), int(20*0.2/0.3)]
+map_1.goal = [int(20*0.2/0.3), int(100*0.2/0.3)]
 
 # print(map_1.map_data)
 # print(f"{len(map_1.map_data)}, {len(map_1.map_data[0])}")
@@ -74,12 +74,12 @@ map_2 = Maps()
 map_3 = Maps()
 
 map_2.map_data = map1
-map_2.start = [int(16*0.14/0.3), int(16*0.14/0.3)]
-map_2.goal = [int(30*0.14/0.3), int(80*0.14/0.3)]
+map_2.start = [int(16*0.2/0.3), int(16*0.2/0.3)]
+map_2.goal = [int(30*0.2/0.3), int(80*0.2/0.3)]
 
 map_3.map_data = map1
-map_3.start = [int(30*0.14/0.3), int(15*0.14/0.3)]
-map_3.goal = [int(40*0.14/0.3), int(100*0.14/0.3)]
+map_3.start = [int(30*0.2/0.3), int(15*0.2/0.3)]
+map_3.goal = [int(40*0.2/0.3), int(100*0.2/0.3)]
 
 maps_dictionary = {1:map_1, 2:map_2, 3:map_3}
 

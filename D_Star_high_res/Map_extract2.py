@@ -3,7 +3,7 @@ import numpy as np
 import csv
 import pandas as pd
 
-img = cv2.imread('D_star/Floor Plan.jpg')
+img = cv2.imread('D_star_high_res/Floor Plan.jpg')
 image_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 r_channel, g_channel, b_channel = cv2.split(image_rgb)
 r_thresh = 230
@@ -29,7 +29,7 @@ for y in range(height):
             
 
 final_image = pd.DataFrame(final_image)
-final_image.to_csv("D_star/refinedmap.csv", header=False, index=False)
+final_image.to_csv("D_star_high_res/refinedmap.csv", header=False, index=False)
 
 
 img = cv2.circle(img, (1,1), 2, (255,133,133), 10)

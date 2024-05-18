@@ -168,20 +168,56 @@ class Maze:
          successors.append([new_successor, new_action, new_cost])
          
      return successors
+  
+  def getPredecessors(self, state):
+     """
+       state: Search state
+     
+     For a given state, this should return a list of triples, 
+     (successor, action, stepCost), where 'successor' is a 
+     successor to the current state, 'action' is the action
+     required to get there, and 'stepCost' is the incremental 
+     cost of expanding to that successor
+     """
+     if enable_plots:
+         #Update changes on the plot copy
+         if self.map_plot_copy[state[0]][state[1]] == maze_maps.fringe_id:
+             self.map_plot_copy[state[0]][state[1]] = maze_maps.expanded_id
+     
+     predecessors = []
+     self.state_expansion_counter = self.state_expansion_counter + 1
+     for action in self.eight_neighbor_actions:
+         
+         #Get individual action
+         del_x, del_y = self.eight_neighbor_actions.get(action)
+         
+         #Get successor
+         new_predecessor = [state[0] - del_x , state[1] - del_y]
+         new_action = action
+         
+         # Check for obstacle 
+         if self.isObstacle(new_predecessor):
+             continue
+          
+         
+         if enable_plots:
+             #Update changes on the plot copy
+             if self.map_plot_copy[new_predecessor[0]][new_predecessor[1]] == maze_maps.free_space_id1 or self.map_plot_copy[new_predecessor[0]][new_predecessor[1]] == maze_maps.free_space_id2:
+                 self.map_plot_copy[new_predecessor[0]][new_predecessor[1]] = maze_maps.fringe_id
+         
+         #Check cost
+         if self.maze_map.map_data[new_predecessor[0]][new_predecessor[1]] == maze_maps.free_space_id2:
+             new_cost = maze_maps.free_space_id2_cost
+         else:
+             new_cost = maze_maps.free_space_id1_cost 
+             
+         predecessors.append([new_predecessor, new_action, new_cost])
+         
+     return predecessors
 
 def heuristic(s1, s2):
     return int(math.dist(s1, s2)/math.sqrt(2))
     #return 0
-
-def pred(u, problem, states):
-    predecessors = []
-    for state in states:
-        successors = problem.getSuccessors(state)
-        for next in successors:
-            if next[0] == u:
-                predecessors.append([state,next[1],next[2]])
-                break
-    return predecessors
 
 def CalculateKey(s, s_start, km):
     return [min(s.g, s.rhs) + heuristic(s.state, s_start.state) + km, min(s.g, s.rhs)] 
@@ -195,12 +231,12 @@ def Initialize(problem, s_start):
     s_index = 0
     for state in states:
         if problem.isGoalState(state):
-            predecessors = pred(state, problem, states)
+            predecessors = problem.getPredecessors(state)
             successors = problem.getSuccessors(state)
             goal_state = Node(state, math.inf, 0, successors, predecessors, index)
             states_with_cost.append(goal_state)
         else:
-            predecessors = pred(state, problem, states)
+            predecessors = problem.getPredecessors(state)
             successors = problem.getSuccessors(state)
             node = Node(state, math.inf, math.inf, successors, predecessors, index)
             states_with_cost.append(node)
@@ -544,7 +580,7 @@ if __name__ == '__main__':
     current_maze = Maze(1)
     print(path1)
     result = pd.DataFrame(path1)
-    result.to_csv("D_Star/Path1.csv", header=False, index=False)
+    result.to_csv("D_Star_high_res/Path1.csv", header=False, index=False)
     path = actions1
     if path:
         row,col = current_maze.getStartState() 
@@ -570,7 +606,7 @@ if __name__ == '__main__':
 
     print(path2)
     result = pd.DataFrame(path2)
-    result.to_csv("D_Star/Path2.csv", header=False, index=False)
+    result.to_csv("D_Star_high_res/Path2.csv", header=False, index=False)
     path = actions2
     if path:
         row,col = current_maze.getStartState() 
@@ -595,7 +631,7 @@ if __name__ == '__main__':
     current_maze = Maze(3)
     print(path3)
     result = pd.DataFrame(path3)
-    result.to_csv("D_Star/Path3.csv", header=False, index=False)
+    result.to_csv("D_Star_high_res/Path3.csv", header=False, index=False)
     path = actions3
     if path:
         #Check path validity
@@ -636,7 +672,7 @@ import csv
 import numpy as np
 import matplotlib.animation as animation
 
-with open("D_star/refinedmap.csv", newline='') as f:
+with open("D_star_high_res/refinedmap.csv", newline='') as f:
     reader = csv.reader(f)
     map = list(reader)
 
@@ -712,7 +748,7 @@ def animate(i):
 ani = animation.FuncAnimation(fig, animate, frames=max(len(path1), len(path2), len(path3)), interval=200, blit=True)
 
 # Save the animation as a GIF
-ani.save('D_star/robot_paths.gif', writer='pillow', fps=5)
+ani.save('D_star_high_res/robot_paths.gif', writer='pillow', fps=5)
 
 # Show the animation
 plt.show()        

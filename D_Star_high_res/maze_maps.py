@@ -17,7 +17,7 @@ expanded_id = 6
 
 import csv
 
-with open("D_star/refinedmap.csv", newline='') as f:
+with open("D_star_high_res/refinedmap.csv", newline='') as f:
     reader = csv.reader(f)
     map = list(reader)
 
@@ -64,7 +64,7 @@ class Maps:
 map_1 = Maps()
 map_1.map_data = map1
 
-map_1.start = [65, 20]
+map_1.start = [70, 90]
 map_1.goal = [20, 100]
 
 # print(map_1.map_data)
@@ -74,11 +74,11 @@ map_2 = Maps()
 map_3 = Maps()
 
 map_2.map_data = map1
-map_2.start = [16, 16]
+map_2.start = [70, 80]
 map_2.goal = [30, 80]
 
 map_3.map_data = map1
-map_3.start = [30, 15]
+map_3.start = [60, 10]
 map_3.goal = [40, 100]
 
 maps_dictionary = {1:map_1, 2:map_2, 3:map_3}
